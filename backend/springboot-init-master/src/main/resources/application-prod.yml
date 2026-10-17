@@ -1,0 +1,6 @@
+# Credentials are inherited from the shared environment-based configuration.
+knife4j:
+  basic:
+    enable: true
+    username: ${KNIFE4J_USERNAME}
+    password: ${KNIFE4J_PASSWORD}

@@ -1,0 +1,6 @@
+# Use an isolated test database; never point integration tests at production.
+spring:
+  datasource:
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}

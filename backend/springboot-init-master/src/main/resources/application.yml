@@ -1,0 +1,58 @@
+# Shared settings only. Credentials come from environment variables.
+spring:
+  application:
+    name: ai-powered-bi
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  session:
+    timeout: 2592000
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+server:
+  address: ${SERVER_ADDRESS:0.0.0.0}
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        max-age: 2592000
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+xun-fei:
+  client:
+    appId: ${XUNFEI_APP_ID}
+    apiSecret: ${XUNFEI_API_SECRET}
+    apiKey: ${XUNFEI_API_KEY}
+# Optional file storage integration: configure before using upload endpoints.
+cos:
+  client:
+    accessKey: ${COS_ACCESS_KEY:xxx}
+    secretKey: ${COS_SECRET_KEY:xxx}
+    region: ${COS_REGION:xxx}
+    bucket: ${COS_BUCKET:xxx}
+knife4j:
+  enable: true
+  openapi:
+    title: AI-powered BI API
+    version: 1.0
+    group:
+      default:
+        api-rule: package
+        api-rule-resources:
+          - com.yupi.springbootinit.controller

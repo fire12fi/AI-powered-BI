@@ -1,195 +1,114 @@
-# SpringBoot 项目初始模板
+# AI-powered BI · 智能 BI 助手
 
-> 作者：[程序员鱼皮](https://github.com/liyupi)
-> 仅分享于 [编程导航知识星球](https://yupi.icu)
+基于 React、Spring Boot 和讯飞星火的智能数据分析项目。用户上传 Excel、填写分析目标并选择图表类型，后端将表格转换成文本，调用星火模型生成 ECharts 配置与分析结论，前端展示图表和结果。
 
-基于 Java SpringBoot 的项目初始模板，整合了常用框架和主流业务的示例代码。
+## 功能
 
-只需 1 分钟即可完成内容网站的后端！！！大家还可以在此基础上快速开发自己的项目。
+- 用户注册、登录、退出及基于 Session 的登录状态。
+- 上传 Excel，填写分析目标、图表名称和图表类型。
+- 同步调用讯飞星火 V4.0，生成图表配置和文字结论。
+- 使用 ECharts 展示图表，并在数据库保存原始数据、图表配置和分析结果。
+- 图表增删改查、当前用户图表分页查询，以及管理员权限校验。
+- 保留用户管理、帖子及文件上传等模板接口；COS 文件上传需要另外配置。
 
-[toc]
+## 技术栈与目录
 
-## 配置与隐私
+后端使用 Spring Boot 2.7.2、MyBatis Plus、MySQL、EasyExcel 和 spark4j；前端使用 React 19、TypeScript、Umi Max 4、Ant Design 5 和 ECharts 6。
 
-仓库仅保存通用配置。数据库、Redis、Elasticsearch、微信、COS 和生产接口文档的凭据通过环境变量提供，请勿将真实值写入源码。
-
-启动前必须设置 `DB_URL`、`DB_USERNAME`、`DB_PASSWORD`。`DB_URL` 应指向自行创建的数据库；本项目的 `sql/create_table.sql` 创建的是 `BI_db`。
-
-使用 `prod` 或 `test` 环境时，还需要设置 `REDIS_HOST`、`REDIS_PASSWORD`、`ELASTICSEARCH_URIS`、`ELASTICSEARCH_USERNAME`、`ELASTICSEARCH_PASSWORD`，Redis 端口可通过 `REDIS_PORT` 设置。生产环境接口文档需设置 `KNIFE4J_USERNAME`、`KNIFE4J_PASSWORD`。
-
-可选集成的变量包括 `WX_MP_TOKEN`、`WX_MP_AES_KEY`、`WX_MP_APP_ID`、`WX_MP_SECRET`、`WX_OPEN_APP_ID`、`WX_OPEN_APP_SECRET`、`COS_ACCESS_KEY`、`COS_SECRET_KEY`、`COS_REGION`、`COS_BUCKET`。未启用的集成保留模板占位值，使用前需配置真实值。
-
-也可在本机创建 `src/main/resources/application-dev.yml` 或 `application-local.yml`，并通过 `SPRING_PROFILES_ACTIVE` 选择环境；这些文件已被 Git 和 Docker 忽略。IDE 运行配置或部署平台可注入环境变量，Spring Boot 不会自动读取 `.env`。
-
-以下模板原始说明中的账号、地址和密码仅为示例，实际使用以上述环境变量为准。请保留本地凭据，不要提交数据库备份、上传文件、日志、私钥或 IDE 配置。
-
-## 模板特点
-
-### 主流框架 & 特性
-
-- Spring Boot 2.7.x（贼新）
-- Spring MVC
-- MyBatis + MyBatis Plus 数据访问（开启分页）
-- Spring Boot 调试工具和项目处理器
-- Spring AOP 切面编程
-- Spring Scheduler 定时任务
-- Spring 事务注解
-
-### 数据存储
-
-- MySQL 数据库
-- Redis 内存数据库
-- Elasticsearch 搜索引擎
-- 腾讯云 COS 对象存储
-
-### 工具类
-
-- Easy Excel 表格处理
-- Hutool 工具库
-- Apache Commons Lang3 工具类
-- Lombok 注解
-
-### 业务特性
-
-- 业务代码生成器（支持自动生成 Service、Controller、数据模型代码）
-- Spring Session Redis 分布式登录
-- 全局请求响应拦截器（记录日志）
-- 全局异常处理器
-- 自定义错误码
-- 封装通用响应类
-- Swagger + Knife4j 接口文档
-- 自定义权限注解 + 全局校验
-- 全局跨域处理
-- 长整数丢失精度解决
-- 多环境配置
-
-
-## 业务功能
-
-- 提供示例 SQL（用户、帖子、帖子点赞、帖子收藏表）
-- 用户登录、注册、注销、更新、检索、权限管理
-- 帖子创建、删除、编辑、更新、数据库检索、ES 灵活检索
-- 帖子点赞、取消点赞
-- 帖子收藏、取消收藏、检索已收藏帖子
-- 帖子全量同步 ES、增量同步 ES 定时任务
-- 支持微信开放平台登录
-- 支持微信公众号订阅、收发消息、设置菜单
-- 支持分业务的文件上传
-
-### 单元测试
-
-- JUnit5 单元测试
-- 示例单元测试类
-
-### 架构设计
-
-- 合理分层
-
-
-## 快速上手
-
-> 所有需要修改的地方鱼皮都标记了 `todo`，便于大家找到修改的位置~
-
-### MySQL 数据库
-
-1）修改 `application.yml` 的数据库配置为你自己的：
-
-```yml
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/my_db
-    username: root
-    password: 123456
+```text
+backend/springboot-init-master/  Spring Boot 后端及 Maven 构建
+  src/main/java/               控制器、业务逻辑、AI 调用、数据模型
+  src/main/resources/          公共配置与 MyBatis 映射
+  sql/                        数据库结构初始化脚本
+front/BI-front/                实际前端应用（在这里安装和运行）
+  config/                     路由、开发代理、OpenAPI 配置
+  src/pages/Welcome.tsx       智能分析页面
+  src/services/bi/            后端接口封装
+front/package.json            原有外层依赖清单，不是前端启动入口
 ```
 
-2）执行 `sql/create_table.sql` 中的数据库语句，自动创建库表
+## 环境要求
 
-3）启动项目，访问 `http://localhost:8101/api/doc.html` 即可打开接口文档，不需要写前端就能在线调试接口了~
+- 推荐 JDK 17、Maven 3.8+。
+- Node.js 20+，npm。
+- MySQL 8，以及可调用星火 V4.0 的讯飞应用凭据。
 
-![](doc/swagger.png)
+Redis 自动配置在启动类中默认禁用；主要分析流程不依赖 Redis、Elasticsearch 或 COS。若启用模板的帖子搜索等额外功能，需自行配置相应服务。
 
-### Redis 分布式登录
+## 本地启动
 
-1）修改 `application.yml` 的 Redis 配置为你自己的：
+### 1. 初始化数据库
 
-```yml
-spring:
-  redis:
-    database: 1
-    host: localhost
-    port: 6379
-    timeout: 5000
-    password: 123456
+在 MySQL 客户端执行 `backend/springboot-init-master/sql/create_table.sql`。脚本仅包含数据库和表结构，不含用户记录或数据库导出数据。默认数据库名是 `bi`，可按环境修改。
+
+### 2. 配置并启动后端
+
+公共 YAML 只保留环境变量引用，不保存真实凭据。请通过 IDE、系统环境变量或部署平台设置：
+
+| 变量 | 用途 |
+| --- | --- |
+| `DB_URL` | MySQL JDBC URL，例如 `jdbc:mysql://localhost:3306/bi` |
+| `DB_USERNAME` | 数据库账号 |
+| `DB_PASSWORD` | 数据库密码 |
+| `XUNFEI_APP_ID` | 讯飞应用 ID |
+| `XUNFEI_API_KEY` | 讯飞 API Key |
+| `XUNFEI_API_SECRET` | 讯飞 API Secret |
+| `SERVER_PORT` | 后端端口，默认 `8080` |
+| `SPRING_PROFILES_ACTIVE` | 环境，默认 `dev` |
+
+```bash
+cd backend/springboot-init-master
+mvn spring-boot:run
 ```
 
-2）修改 `application.yml` 中的 session 存储方式：
+接口文档：[http://localhost:8080/api/doc.html](http://localhost:8080/api/doc.html)。
 
-```yml
-spring:
-  session:
-    store-type: redis
+若习惯使用私有配置文件，可创建被忽略的 `application-local.yml`，并设置 `SPRING_PROFILES_ACTIVE=local`。不要把环境变量的真实值、私有 YAML 或 IDE 运行配置提交到仓库。Spring Boot 不会自动读取 `.env`。
+
+### 3. 启动前端
+
+```bash
+cd front/BI-front
+npm install
+npm run dev
 ```
 
-3）移除 `MainApplication` 类开头 `@SpringBootApplication` 注解内的 exclude 参数：
+打开 [http://localhost:8000](http://localhost:8000)，注册并登录，再上传 `.xlsx` 文件进行分析。
 
-修改前：
+前端使用同源 `/api` 请求；开发代理默认转发到 `http://localhost:8080`。如果后端地址不同，在启动前设置 `BI_API_TARGET`。OpenAPI 生成命令 `npm run openapi` 使用相同目标，需要后端运行。
 
-```java
-@SpringBootApplication(exclude = {RedisAutoConfiguration.class})
+## 构建与部署
+
+```bash
+# 后端：编译、编译测试源码并打包，跳过需要外部服务的测试
+cd backend/springboot-init-master
+mvn package -DskipTests
+
+# 前端：在独立终端运行
+cd front/BI-front
+npm run build
 ```
 
-修改后：
+后端产物为 `target/springboot-init-0.0.1-SNAPSHOT.jar`，前端产物为 `front/BI-front/dist/`。生产环境通过 Web 服务器将 `/api` 反向代理到后端；开发代理不会进入生产构建。AI 分析是同步请求，反向代理超时应覆盖模型响应时间。
 
+生产环境可设置 `SPRING_PROFILES_ACTIVE=prod`；除基础凭据外，还需设置 `KNIFE4J_USERNAME`、`KNIFE4J_PASSWORD` 以保护接口文档。可选 COS 上传需要设置 `COS_ACCESS_KEY`、`COS_SECRET_KEY`、`COS_REGION`、`COS_BUCKET`，并按部署环境调整 `FileConstant.COS_HOST`。
 
-```java
-@SpringBootApplication
-```
+现有集成测试会连接数据库、搜索或存储服务，AI 测试还会实际调用模型。不要直接对生产环境执行测试；`test` profile 使用独立的 `TEST_DB_URL`、`TEST_DB_USERNAME`、`TEST_DB_PASSWORD`。
 
-### Elasticsearch 搜索引擎
+## 数据与配置边界
 
-1）修改 `application.yml` 的 Elasticsearch 配置为你自己的：
+- 仓库忽略本地 YAML、`.env`、IDE 配置、依赖目录、Umi 缓存、构建产物、私钥、日志和备份。
+- 请求日志不打印请求参数，AI 日志不打印完整分析结果，SQL 日志默认关闭。
+- 上传的数据会转换为文本并发送给讯飞星火，原始数据和生成结果会保存到数据库；分析页面也会将结果缓存到当前浏览器的 localStorage。使用真实业务数据前应确认其可发送给模型服务。
+- 前端配置会进入浏览器，任何 AI 密钥、数据库密码都只能保存在后端环境中。
 
-```yml
-spring:
-  elasticsearch:
-    uris: http://localhost:9200
-    username: root
-    password: 123456
-```
+## 当前实现限制
 
-2）复制 `sql/post_es_mapping.json` 文件中的内容，通过调用 Elasticsearch 的接口或者 Kibana Dev Tools 来创建索引（相当于数据库建表）
+- 前端文件选择器允许 CSV/XLS/XLSX，但后端解析器目前固定按 XLSX 读取；请使用 `.xlsx`。
+- AI 分析采用同步调用，前端请求超时为 60 秒；图表实体中的状态字段不代表已实现异步任务队列。
+- 分析结果缓存在浏览器；文件列表恢复后需要重新选择文件才能再次上传。
+- 图表查询和部分模板接口的权限边界仍需在正式上线前结合业务完善。本项目尚未完成生产环境的全面安全审计。
 
-```
-PUT post_v1
-{
- 参数见 sql/post_es_mapping.json 文件
-}
-```
+## 致谢
 
-这步不会操作的话需要补充下 Elasticsearch 的知识，或者自行百度一下~
-
-3）开启同步任务，将数据库的帖子同步到 Elasticsearch
-
-找到 job 目录下的 `FullSyncPostToEs` 和 `IncSyncPostToEs` 文件，取消掉 `@Component` 注解的注释，再次执行程序即可触发同步：
-
-```java
-// todo 取消注释开启任务
-//@Component
-```
-
-### 业务代码生成器
-
-支持自动生成 Service、Controller、数据模型代码，配合 MyBatisX 插件，可以快速开发增删改查等实用基础功能。
-
-找到 `generate.CodeGenerator` 类，修改生成参数和生成路径，并且支持注释掉不需要的生成逻辑，然后运行即可。
-
-```
-// 指定生成参数
-String packageName = "com.yupi.springbootinit";
-String dataName = "用户评论";
-String dataKey = "userComment";
-String upperDataKey = "UserComment";
-```
-
-生成代码后，可以移动到实际项目中，并且按照 `// todo` 注释的提示来针对自己的业务需求进行修改。
+项目基于程序员鱼皮的 Spring Boot 初始化模板与 Ant Design Pro 扩展，保留了源码中的原作者信息。星火 SDK 使用开源 spark4j。第三方代码和依赖的使用请遵守各自许可。
